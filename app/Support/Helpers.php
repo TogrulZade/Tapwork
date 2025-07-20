@@ -5,6 +5,9 @@ use Carbon\Carbon;
 if (!function_exists('parseAzeriDate')) {
     function parseAzeriDate(string $azeriDate): ?string
     {
+        if (empty($azeriDate)) {
+            return null;
+        }
         $monthMap = [
             'Yanvar' => 'January',
             'Fevral' => 'February',
