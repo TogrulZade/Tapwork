@@ -24,9 +24,9 @@ class GetJobController extends Controller
 
         $data = $this->getJobService->getData($jobs);
 
-        $this->getJobService->saveCompany($data);
-
         $this->jobNotificationService->sendNewJobNotification($data);
+
+        $this->getJobService->saveCompany($data);
 
         $this->getJobService->saveJob($data);
 
