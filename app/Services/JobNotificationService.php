@@ -16,8 +16,8 @@ class JobNotificationService
             Http::post(env("TELEGRAM_URL"), [
                 'chat_id' => '@tapworkaz',
                 'text' => $job['title'] . "\n" .
-                    "Şirkət: " . $job['company']->name . "\n",
-                "Elan tarixi: " . Carbon::parse($job['created_at'])->format('d-m-Y H:i') . "\n" .
+                    "Şirkət: " . $job['company']->name . "\n" .
+                    "Elan tarixi: " . Carbon::parse($job['created_at'])->format('d-m-Y H:i') . "\n" .
                     "Təsvir: " . $job['description'] . "\n" .
                     "Link: " . $job['url'] . "\n",
             ]);
