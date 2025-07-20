@@ -29,54 +29,42 @@ class GetJobService
         return $data;
     }
 
-    public function saveJob(array $data)
+    public function saveJob(array $data): array
     {
+        $newlyCreatedJobs = [];
+
         foreach ($data as $job) {
             $company = Company::where('name', $job['company'])->first();
             if (!$company) {
-                continue; // Skip if company not found
+                Log::warning('Company not found: ' . $job['company']);
+                continue;
             }
 
             $existingJob = JobPost::where('url', $job['url'])->first();
 
             if ($existingJob) {
-                // Lazım gələrsə update elə
-                $existingJob->update(
-                    [
-                        'title' => $job['title'],
-                        'description' => $job['description'],
-                        'company_id' => $company->id,
-                        'start_date' => $job['start_date'],
-                        'end_date' => $job['end_date'],
-                    ]
-                );
+                $existingJob->update([
+                    'title' => $job['title'],
+                    'description' => $job['description'],
+                    'company_id' => $company->id,
+                    'start_date' => $job['start_date'],
+                    'end_date' => $job['end_date'],
+                ]);
                 Log::channel('bulk_jobs')->info('Job already exists, updated: ' . $job['title']);
-                return false; // yeni elan deyil
             } else {
-                $company->jobs()->create(
-                    [
-                        'title' => $job['title'],
-                        'url' => $job['url'],
-                        'description' => $job['description'],
-                        'start_date' => $job['start_date'],
-                        'end_date' => $job['end_date'],
-                    ]
-                );
+                $createdJob = $company->jobs()->create([
+                    'title' => $job['title'],
+                    'url' => $job['url'],
+                    'description' => $job['description'],
+                    'start_date' => $job['start_date'],
+                    'end_date' => $job['end_date'],
+                ]);
                 Log::channel('bulk_jobs')->info('New job created: ' . $job['title']);
-                return true; // yeni elan yaradıldı
+                $newlyCreatedJobs[] = $createdJob;
             }
-
-            // JobPost::updateOrCreate(
-            //     ['url' => $job['url']],
-            //     [
-            //         'title' => $job['title'],
-            //         'description' => $job['description'],
-            //         "company_id" => $company->id,
-            //         'start_date' => $job['start_date'],
-            //         'end_date' => $job['end_date'],
-            //     ]
-            // );
         }
+
+        return $newlyCreatedJobs; // Yeni yaranan elanlar geri qaytarılır
     }
 
     public function saveCompany(array $data): void

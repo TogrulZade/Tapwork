@@ -22,18 +22,20 @@ class GetJobController extends Controller
     {
         $jobs = $request->jobs;
 
-        $data = $this->getJobService->getData($jobs);
+        $data = $this->getJobService->getData($jobs); // datanı düzəlt
 
-        $this->jobNotificationService->sendNewJobNotification($data);
+        $this->getJobService->saveCompany($data); // şirkətləri save et
 
-        $this->getJobService->saveCompany($data);
+        $newJobs = $this->getJobService->saveJob($data); // yalnız yeni yaranan jobları topla
 
-        $this->getJobService->saveJob($data);
-
+        if (!empty($newJobs)) {
+            $this->jobNotificationService->sendNewJobNotification($newJobs); // onlara notifikasiya göndər
+        }
 
         return response()->json([
             'status' => 'success',
             'data' => $data,
+            'new_job_count' => count($newJobs),
         ]);
     }
 }
