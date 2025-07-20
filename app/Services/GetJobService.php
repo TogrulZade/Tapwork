@@ -36,16 +36,30 @@ class GetJobService
             if (!$company) {
                 continue; // Skip if company not found
             }
-            JobPost::updateOrCreate(
-                ['url' => $job['url']],
-                [
-                    'title' => $job['title'],
-                    'description' => $job['description'],
-                    "company_id" => $company->id,
-                    'start_date' => $job['start_date'],
-                    'end_date' => $job['end_date'],
-                ]
-            );
+
+            $existingJob = JobPost::where('url', $job['url'])->first();
+
+            if ($existingJob) {
+                // Lazım gələrsə update elə
+                $existingJob->update($data);
+                Log::channel('job')->info('Job already exists, updated: ' . $job['title']);
+                return false; // yeni elan deyil
+            } else {
+                $company->jobs()->create($data);
+                Log::channel('job')->info('New job created: ' . $job['title']);
+                return true; // yeni elan yaradıldı
+            }
+
+            // JobPost::updateOrCreate(
+            //     ['url' => $job['url']],
+            //     [
+            //         'title' => $job['title'],
+            //         'description' => $job['description'],
+            //         "company_id" => $company->id,
+            //         'start_date' => $job['start_date'],
+            //         'end_date' => $job['end_date'],
+            //     ]
+            // );
         }
     }
 

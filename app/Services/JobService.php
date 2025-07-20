@@ -22,4 +22,9 @@ class JobService
             ->with('company')
             ->get();
     }
+
+    public function isJobSent($jobUrl): bool
+    {
+        return JobPost::where('url', $jobUrl)->whereSent(true)->exists();
+    }
 }

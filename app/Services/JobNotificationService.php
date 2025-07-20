@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\JobPost;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Http;
 
 class JobNotificationService
@@ -18,6 +20,22 @@ class JobNotificationService
                     $job['description'] . "\n" .
                     $job['company'] . "\n",
             ]);
+        }
+    }
+
+    public function sendNewJobNotification(array $jobs)
+    {
+        foreach ($jobs as $job) {
+            $is_sent = JobPost::where('url', $job['url'])->first();
+            if (!$is_sent) {
+                Http::post(env("TELEGRAM_URL"), [
+                    'chat_id' => env("TELEGRAM_CHAT_ID"),
+                    'text' => "Yeni iş elanı: " . $job['title'] . "\n" .
+                        "Şirkət: " . $job['company'] . "\n" .
+                        "Təsvir: " . $job['description'] . "\n" .
+                        "Link: " . $job['url'] . "\n",
+                ]);
+            }
         }
     }
 }
