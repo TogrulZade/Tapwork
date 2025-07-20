@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\JobPost;
+use App\Models\TelegramUser;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Http;
@@ -39,5 +40,36 @@ class JobNotificationService
                 ]);
             }
         }
+    }
+
+    public function notifySubscribers(JobPost $job): void
+    {
+        $users = TelegramUser::all();
+
+        foreach ($users as $user) {
+            foreach ($user->keywords ?? [] as $keyword) {
+                if (
+                    stripos($job->title, $keyword) !== false ||
+                    stripos($job->description, $keyword) !== false
+                ) {
+                    $this->sendMessage(
+                        $user->chat_id,
+                        "🔔 Yeni iş elanı:\n" .
+                            "{$job->title}\n" .
+                            "{$job->company->name}\n" .
+                            "{$job->url}"
+                    );
+                    break; // hər istifadəçiyə yalnız bir dəfə göndər
+                }
+            }
+        }
+    }
+
+    public function sendMessage(string $chatId, string $text): void
+    {
+        Http::post(env('TELEGRAM_URL'), [
+            'chat_id' => $chatId,
+            'text' => $text,
+        ]);
     }
 }

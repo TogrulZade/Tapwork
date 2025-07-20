@@ -61,6 +61,7 @@ class GetJobService
                 ]);
                 Log::channel('bulk_jobs')->info('New job created: ' . $job['title']);
                 $newlyCreatedJobs[] = $createdJob;
+                app(JobNotificationService::class)->notifySubscribers($createdJob);
             }
         }
 

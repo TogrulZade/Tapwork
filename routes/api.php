@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\GetJobController;
 use App\Http\Controllers\Api\JobController;
+use App\Http\Controllers\Api\TelegramBotController;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,10 @@ Route::group(['prefix' => 'bulk'], function () {
 
 Route::group(['prefix' => 'jobs'], function () {
     Route::get('/', [JobController::class, "search"]);
+});
+
+Route::group(['prefix' => 'telegram'], function () {
+    Route::get("webhook", [TelegramBotController::class, "webbook"])->name("telegram.webhook");
 });
 
 Route::get('/post', function () {
