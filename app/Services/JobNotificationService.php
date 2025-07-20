@@ -18,7 +18,7 @@ class JobNotificationService
                 'text' => $job['title'] . "\n" .
                     "Elan tarixi: " . Carbon::parse($job['created_at'])->format('d-m-Y H:i') . "\n" .
                     $job['description'] . "\n" .
-                    $job['company'] . "\n",
+                    $job['company']->name . "\n",
             ]);
         }
     }
