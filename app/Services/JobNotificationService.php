@@ -26,8 +26,8 @@ class JobNotificationService
     public function sendNewJobNotification(array $jobs)
     {
         foreach ($jobs as $job) {
-            $is_sent = JobPost::where('url', $job['url'])->first();
-            if (!is_null($is_sent)) {
+            $exists = JobPost::where('url', $job['url'])->exists();
+            if (!$exists) {
                 Http::post(env("TELEGRAM_URL"), [
                     'chat_id' => env("TELEGRAM_CHAT_ID"),
                     'text' => $job['title'] . "\n" .
