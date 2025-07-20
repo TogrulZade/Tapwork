@@ -39,6 +39,13 @@ class TelegramBotController extends Controller
             case '/help':
                 $this->sendMessage($chatId, "Əmrlər:\n/start – Başla\n/my_keywords – Açar sözlərini göstər\n/help – Yardım");
                 return;
+
+            default:
+                // Əgər komanda varsa, amma tanınmırsa
+                // if (str_starts_with($text, '/')) {
+                $this->sendMessage($chatId, "Bu komanda tanınmır. /help yaza bilərsən.");
+                return;
+                // }
         }
 
         // Əgər komanda deyilsə və mətn varsa: Açar sözləri kimi qəbul et
