@@ -26,9 +26,10 @@ class GetJobController extends Controller
 
         $this->getJobService->saveCompany($data);
 
+        $this->jobNotificationService->sendNewJobNotification($data);
+
         $this->getJobService->saveJob($data);
 
-        $this->jobNotificationService->sendNewJobNotification($data);
 
         return response()->json([
             'status' => 'success',
