@@ -16,4 +16,9 @@ class Company extends Model
         'website' => 'string',
         'logo' => 'string',
     ];
+
+    public function jobs()
+    {
+        return $this->hasMany(JobPost::class);
+    }
 }
