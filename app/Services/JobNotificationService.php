@@ -27,10 +27,10 @@ class JobNotificationService
     {
         foreach ($jobs as $job) {
             $is_sent = JobPost::where('url', $job['url'])->first();
-            if (!$is_sent) {
+            if (!is_null($is_sent)) {
                 Http::post(env("TELEGRAM_URL"), [
                     'chat_id' => env("TELEGRAM_CHAT_ID"),
-                    'text' => "Yeni iş elanı: " . $job['title'] . "\n" .
+                    'text' => $job['title'] . "\n" .
                         "Şirkət: " . $job['company'] . "\n" .
                         "Təsvir: " . $job['description'] . "\n" .
                         "Link: " . $job['url'] . "\n",
