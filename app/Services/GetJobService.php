@@ -42,11 +42,11 @@ class GetJobService
             if ($existingJob) {
                 // Lazım gələrsə update elə
                 $existingJob->update($data);
-                Log::channel('job')->info('Job already exists, updated: ' . $job['title']);
+                Log::channel('bulk_jobs')->info('Job already exists, updated: ' . $job['title']);
                 return false; // yeni elan deyil
             } else {
                 $company->jobs()->create($data);
-                Log::channel('job')->info('New job created: ' . $job['title']);
+                Log::channel('bulk_jobs')->info('New job created: ' . $job['title']);
                 return true; // yeni elan yaradıldı
             }
 
