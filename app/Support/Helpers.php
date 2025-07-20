@@ -8,6 +8,16 @@ if (!function_exists('parseAzeriDate')) {
         if (empty($azeriDate)) {
             return null;
         }
+
+        // Əgər ISO formatdırsa, birbaşa parse et
+        if (\Carbon\Carbon::hasFormat($azeriDate, 'Y-m-d\TH:i:s.u\Z')) {
+            try {
+                return Carbon::parse($azeriDate)->toDateString();
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
         $monthMap = [
             'Yanvar' => 'January',
             'Fevral' => 'February',
@@ -23,6 +33,8 @@ if (!function_exists('parseAzeriDate')) {
             'Dekabr' => 'December',
         ];
 
+        $converted = $azeriDate;
+
         foreach ($monthMap as $az => $en) {
             if (str_contains($azeriDate, $az)) {
                 $converted = str_replace($az, $en, $azeriDate);
@@ -30,7 +42,8 @@ if (!function_exists('parseAzeriDate')) {
             }
         }
 
-        if (!preg_match('/\d{4}/', $converted ?? '')) {
+        // İl yoxdursa, əlavə et
+        if (!preg_match('/\d{4}/', $converted)) {
             $converted .= ' ' . date('Y');
         }
 
@@ -41,6 +54,7 @@ if (!function_exists('parseAzeriDate')) {
         }
     }
 }
+
 
 if (!function_exists('normalizeRelativeDate')) {
     function normalizeRelativeDate(string $value): string
