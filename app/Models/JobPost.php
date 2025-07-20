@@ -7,7 +7,7 @@ use Laravel\Scout\Searchable;
 
 class JobPost extends Model
 {
-    use Searchable;
+    // use Searchable;
 
     protected $fillable = [
         'title',

@@ -11,10 +11,15 @@ class JobService
 
     public function search($query)
     {
-        return JobPost::search($query)
-            ->query(function ($builder) {
-                $builder->with('company');
-            })
+        // return JobPost::search($query)
+        //     ->query(function ($builder) {
+        //         $builder->with('company');
+        //     })
+        //     ->get();
+
+        return JobPost::where('title', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->with('company')
             ->get();
     }
 }
