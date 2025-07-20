@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\Api\GetJobController;
 use App\Http\Controllers\Api\JobController;
+use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Http;
+
 
 
 Route::get('/user', function (Request $request) {
@@ -21,8 +22,23 @@ Route::group(['prefix' => 'jobs'], function () {
 });
 
 Route::get('/post', function () {
-    Http::post("https://api.telegram.org/bot7375579995:AAGnzRWGWAVwrjCD150C9AXf2Xkqi57jo-M/sendMessage", [
-        'chat_id' => 597076328,
-        'text' => 'Yeni iş elanı gəldi!',
-    ]);
+
+    $jobs = JobPost::where("title", "like", "%PHP%")
+        ->orWhere("description", "like", "%PHP%")
+        ->with("company")
+        ->get();
+
+
+    $jobsArray = [];
+
+    foreach ($jobs as $job) {
+        $jobsArray[] = [
+            'title' => $job->title,
+            'description' => $job->description,
+            'company' => $job->company->name,
+        ];
+    }
+
+    $notify = new \App\Services\JobNotificationService();
+    $notify->sendJobNotification($jobsArray);
 })->name('post');

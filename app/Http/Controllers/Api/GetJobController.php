@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\GetJobService;
+use App\Services\JobNotificationService;
 use Illuminate\Http\Request;
 
 class GetJobController extends Controller
 {
     protected $getJobService;
+    protected $jobNotificationService;
 
-    public function __construct(GetJobService $getJobService)
+    public function __construct(GetJobService $getJobService, JobNotificationService $jobNotificationService)
     {
         $this->getJobService = $getJobService;
+        $this->jobNotificationService = $jobNotificationService;
     }
 
     public function __invoke(Request $request)
@@ -24,6 +27,8 @@ class GetJobController extends Controller
         $this->getJobService->saveCompany($data);
 
         $this->getJobService->saveJob($data);
+
+        $this->jobNotificationService->sendJobNotification($data);
 
         return response()->json([
             'status' => 'success',
