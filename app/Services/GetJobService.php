@@ -22,7 +22,7 @@ class GetJobService
                 'company' => $job['company'],
                 'logo' => $job['logo'] ?? null,
                 'start_date' => Carbon::parse(parseAzeriDate($job['startDate']))->toDateString(),
-                'end_date' => Carbon::parse(parseAzeriDate($job['endDate']))->toDateString(),
+                'end_date' => isset($job['endDate']) ? Carbon::parse(parseAzeriDate($job['endDate']))->toDateString() : null,
             ];
         }
 
