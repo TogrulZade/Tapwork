@@ -23,7 +23,7 @@ Route::group(['prefix' => 'jobs'], function () {
 });
 
 Route::group(['prefix' => 'telegram'], function () {
-    Route::get("webhook", [TelegramBotController::class, "webbook"])->name("telegram.webhook");
+    Route::post("webhook", [TelegramBotController::class, "webbook"])->name("telegram.webhook");
 });
 
 Route::get('/post', function () {
