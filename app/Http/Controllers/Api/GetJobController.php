@@ -29,7 +29,7 @@ class GetJobController extends Controller
         $newJobs = $this->getJobService->saveJob($data); // yalnız yeni yaranan jobları topla
 
         if (!empty($newJobs)) {
-            $this->jobNotificationService->sendNewJobNotification($newJobs); // onlara notifikasiya göndər
+            $this->jobNotificationService->sendJobNotification($newJobs); // onlara notifikasiya göndər
         }
 
         return response()->json([

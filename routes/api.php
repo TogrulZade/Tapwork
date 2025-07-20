@@ -36,6 +36,8 @@ Route::get('/post', function () {
             'title' => $job->title,
             'description' => $job->description,
             'company' => $job->company->name,
+            'url' => $job->url,
+            'created_at' => $job->created_at,
         ];
     }
 
