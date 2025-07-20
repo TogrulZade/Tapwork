@@ -40,11 +40,11 @@ class TelegramBotController extends Controller
                 $this->sendMessage($chatId, "Əmrlər:\n/start – Başla\n/my_keywords – Açar sözlərini göstər\n/help – Yardım");
                 return;
 
-            default:
-                // Əgər komanda varsa, amma tanınmırsa
-                // if (str_starts_with($text, '/')) {
-                $this->sendMessage($chatId, "Bu komanda tanınmır. /help yaza və ya /start deyərək açar sözlər əlavə edə bilərsən.");
-                return;
+                // default:
+                //     // Əgər komanda varsa, amma tanınmırsa
+                //     // if (str_starts_with($text, '/')) {
+                //     $this->sendMessage($chatId, "Bu komanda tanınmır. /help yaza və ya /start deyərək açar sözlər əlavə edə bilərsən.");
+                //     return;
                 // }
         }
 
