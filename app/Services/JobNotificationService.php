@@ -46,6 +46,10 @@ class JobNotificationService
     {
         $users = TelegramUser::all();
 
+        if ($users->isEmpty()) {
+            return; // Heç bir abunəçi yoxdursa, heç nə etmirik
+        }
+
         foreach ($users as $user) {
             foreach ($user->keywords ?? [] as $keyword) {
                 if (
