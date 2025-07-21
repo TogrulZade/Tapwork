@@ -51,7 +51,7 @@ class JobNotificationService
         }
 
         foreach ($users as $user) {
-            foreach ($user->keywords ?? [] as $keyword) {
+            foreach (json_decode($user->keywords, true) ?? [] as $keyword) {
                 if (
                     stripos($job->title, $keyword) !== false ||
                     stripos($job->description, $keyword) !== false
